@@ -26,8 +26,8 @@ writeOGR(ConPoly, dsn = "", layer = "EEZ_hexagons",
 #Creating the hexagon layer
 ConPoly_hex <- ConPoly
 
-hex_area <- my_resolution^2
-dist_between_centroids <- sqrt(2*hex_area/sqrt(3))
+#hex_area <- #Need to define how large (in m2) you want hexagons to be
+dist_between_centroids <- sqrt(2*hex_area/sqrt(3)) #This formula converts between interior hexagon area which is what we are interested in and distance between hexagon centroids which R uses to define hexagon layer
 
 ConPoly_hex = gBuffer(ConPoly_hex, width = 0)
 HexPts <- spsample(ConPoly_hex, type="hexagonal", cellsize = dist_between_centroids, offset = c(0, 0))
@@ -42,6 +42,6 @@ ConPoly <- HexPols
 
 rm(grid, ConPoly_ID, EEZ, hex_area, dist_between_centroids, Poly_ID, ConPoly_hex, HexPts, HexPols)
 
-writeOGR(ConPoly, dsn = "./cuke_present/StudyExtent/Inshore_extent_grid", layer = "Hexagon_grid", 
+writeOGR(ConPoly, dsn = "./output", layer = "Hexagon_grid", 
          driver = "ESRI Shapefile", verbose = TRUE, overwrite = TRUE, morphToESRI = TRUE)
 
