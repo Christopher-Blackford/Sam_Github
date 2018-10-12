@@ -15,6 +15,40 @@ obisdata <- occurrence(geometry =
 -46.31836 50.62507, -48.60352 54.74999, -53.65723 58.63122, 
 -63.32520 59.04055, -73.87207 46.76997, -69.14795 44.02442))")
 
+smallerobisdata <- occurrence(geometry = 
+"POLYGON ((-60.6775 47.3463, -59.6997 46.3697, -57.7441 46.9353, 
+-59.8975 47.7984, -60.6775 47.3463))") 
+
+smallerobisdatavars <- c('id',
+                  'decimalLongitude',
+                  'decimalLatitude',
+                  'catalogNumber',
+                  'datasetName',
+                  'obisID',
+                  'scientificNameID',
+                  'genus',
+                  'family',
+                  'order',
+                  'species',
+                  'speciesID',
+                  'sex',
+                  'datasetID')
+smallerobisdata <- smallerobisdata[smallerobisdatavars]
+
+frstprtsmallerobda <- smallerobisdata[c(1:15000),]
+scndprtsmallerobda <- smallerobisdata[c(15001:30000),]
+thrdprtsmallerobda <- smallerobisdata[c(30001:44510),]
+
+write.csv(frstprtsmallerobda, file = "C:/Users/coleb/Documents/GitHub/Sam_Github/frstprtsmallerobda.csv")
+write.csv(scndprtsmallerobda, file = "C:/Users/coleb/Documents/GitHub/Sam_Github/scndprtsmallerobda.csv")
+write.csv(thrdprtsmallerobda, file = "C:/Users/coleb/Documents/GitHub/Sam_Github/thrdprtsmallerobda.csv")
+
+
+
+#might want to break it down into total occurences of different families, and then maybe number 
+#of families in each hexagon cells. 
+
+
 names(obisdata)
 
 
@@ -26,6 +60,8 @@ obisdatavars <- c('id',
          'obisID',
          'scientificNameID',
          'genus',
+         'family',
+         'order',
          'species',
          'speciesID',
          'sex',
