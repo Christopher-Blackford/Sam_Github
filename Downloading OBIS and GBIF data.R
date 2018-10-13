@@ -1,6 +1,6 @@
 
 ###Loading packages
-library(devtools)
+#library(devtools)
 #install_github("iobis/robis")
 library(robis)
 library(tidyverse)
@@ -18,43 +18,15 @@ obisdata <- occurrence(geometry =
 
 backup <- obisdata
 
-df1 <- obisdata[c(1:1000000),]
-write.csv(df1, "./LargeData/OBIS/OBISData_part1of4.csv")
+#Split larger data into smaller csvs, each with 1 000 000 rows (excel limit is aroun 1 046 000)
+excel_rows <- seq(from = 1, to = nrow(obisdata), by = 1*10^6) #This rounds down so for example it only does to 3 million rows if the dataframe has 3 000 001 rows
 
-df2 <- obisdata[c(1000001:2000000),]
-write.csv(df1, "./LargeData/OBIS/OBISData_part2of4.csv")
-
-df3 <- obisdata[c(2000001:3000000),]
-write.csv(df1, "./LargeData/OBIS/OBISData_part3of4.csv")
-
-df4 <- obisdata[c(3000001:nrow(obisdata)),]
-write.csv(df1, "./LargeData/OBIS/OBISData_part4of4.csv")
-
-
-smallerobisdatavars <- c('id',
-                  'decimalLongitude',
-                  'decimalLatitude',
-                  'catalogNumber',
-                  'datasetName',
-                  'obisID',
-                  'scientificNameID',
-                  'genus',
-                  'family',
-                  'order',
-                  'species',
-                  'speciesID',
-                  'sex',
-                  'datasetID')
-smallerobisdata <- smallerobisdata[smallerobisdatavars]
-
-frstprtsmallerobda <- smallerobisdata[c(1:15000),]
-scndprtsmallerobda <- smallerobisdata[c(15001:30000),]
-thrdprtsmallerobda <- smallerobisdata[c(30001:44510),]
-
-write.csv(frstprtsmallerobda, file = "C:/Users/coleb/Documents/GitHub/Sam_Github/frstprtsmallerobda.csv")
-write.csv(scndprtsmallerobda, file = "C:/Users/coleb/Documents/GitHub/Sam_Github/scndprtsmallerobda.csv")
-write.csv(thrdprtsmallerobda, file = "C:/Users/coleb/Documents/GitHub/Sam_Github/thrdprtsmallerobda.csv")
-
+for (i in 1:length(excel_rows)){
+  if (i < length(excel_rows)){df <- obisdata[c(excel_rows[i]:excel_rows[i+1]-1),]} #Splitting into rows from 1-1000000, 1000001-2000000 etc.
+  else if (i == length(excel_rows)){df <- obisdata[c(excel_rows[i]:nrow(obisdata)),]} #Splitting the final document that probably doesn't fit evenly into a million rows
+  
+  write.csv(df, paste0("./LargeData/OBIS/OBISData_part", i, "of", length(excel_rows), ".csv"), row.names = F)
+}
 
 
 #might want to break it down into total occurences of different families, and then maybe number 
@@ -86,12 +58,19 @@ obisdata <- read.csv.ffdf(file = "file:///C:/Users/coleb/Dropbox/2018MJFWorkStud
 
 #######RGBIF data download
 
-occ_download(geometry = "POLYGON ((-60.6775 47.3463, -59.6997 46.3697, -57.7441 46.9353, 
--59.8975 47.7984, -60.6775 47.3463))")
+gbif_occurence <- occ_search(geometry = "POLYGON ((-60.6775 47.3463, -59.6997 46.3697, -57.7441 46.9353, 
+                             -59.8975 47.7984, -60.6775 47.3463))")
+
+gbif_download <- occ_download(gbif_occurence, user = "runcrispy", pwd = "14socialbutterflies", email = "runcrispy@gmail.com")
+
+
+gbif_download <- occ_download(gbif_occurence, user = "runcrispy", pwd = "14socialbutterflies", email = "runcrispy@gmail.com")
+
 
 occ_download_import(x = NULL, key = NULL, 
                     path = "C:\Users\coleb\Dropbox\2018MJFWorkStudy\ChrisConnectivityWork\OBIS\0003507-181003121212138.zip", fill = FALSE)
 
+write.csv(gbif_occurence, "./LargeData/GBIF/temp/csv")
 
 
 
