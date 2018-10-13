@@ -16,17 +16,19 @@ obisdata <- occurrence(geometry =
 -46.31836 50.62507, -48.60352 54.74999, -53.65723 58.63122, 
 -63.32520 59.04055, -73.87207 46.76997, -69.14795 44.02442))")
 
+backup <- obisdata
+
 df1 <- obisdata[c(1:1000000),]
-write.csv(df1, "./output/LargeData/df1.csv")
+write.csv(df1, "./LargeData/OBIS/OBISData_part1of4.csv")
 
 df2 <- obisdata[c(1000001:2000000),]
-write.csv(df2, "./output/LargeData/df2.csv")
+write.csv(df1, "./LargeData/OBIS/OBISData_part2of4.csv")
 
-df3 <- obisdata[c(2000001:3901265),]
-write.csv(df3, "./output/LargeData/df3.csv")
+df3 <- obisdata[c(2000001:3000000),]
+write.csv(df1, "./LargeData/OBIS/OBISData_part3of4.csv")
 
-
-
+df4 <- obisdata[c(3000001:nrow(obisdata)),]
+write.csv(df1, "./LargeData/OBIS/OBISData_part4of4.csv")
 
 
 smallerobisdatavars <- c('id',
