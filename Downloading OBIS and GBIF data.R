@@ -6,8 +6,10 @@ library(robis)
 library(tidyverse)
 library(rgbif)
 #library(ff)
+library(data.table)
 
 getwd()
+memory.limit(size=25000) #Increase memory limit
 
 #######OBIS data download
 obisdata <- occurrence(geometry = 
@@ -27,40 +29,19 @@ for (i in 1:length(excel_rows)){
 }
 
 
-obisdatavars <- c('id',
-         'decimalLongitude',
-         'decimalLatitude',
-         'catalogNumber',
-         'datasetName',
-         'obisID',
-         'scientificNameID',
-         'genus',
-         'family',
-         'order',
-         'species',
-         'speciesID',
-         'sex',
-         'datasetID')
 
 #######RGBIF data download
 
-gbif_download <- occ_download(user = "runcrispy", pwd = "14socialbutterflies", email = "runcrispy@gmail.com", 
-                              'geometry = POLYGON((-71.10352 47.15984,-65.30273 42.29356,-50.18555 42.29356,-48.07617 51.06902,-55.45898 56.94497,-71.10352 47.15984))')
+occ_download_get("0005369-181003121212138") #https://doi.org/10.15468/dl.bxcxjr 
 
+gbif_data <- data.table::fread("K:/Sam_project/Sam_Github/LargeData/GBIF/0005369-181003121212138.csv", na.strings = c("", NA)) 
 
-occ_download_meta(gbif_download)
+excel_rows <- seq(from = 1, to = nrow(gbif_data), by = 1*10^6) #This rounds down so for example it only does to 3 million rows if the dataframe has 3 000 001 rows
 
-#Tutorial
-#occ_download(user = "runcrispy", pwd = "14socialbutterflies", email = "runcrispy@gmail.com", 'taxonKey = 7264332', 'hasCoordinate = TRUE')
-
-
-#Searching (don't need)
-gbif_occurence <- occ_search(geometry = 'POLYGON((-71.10352 47.15984,-65.30273 42.29356,-50.18555 42.29356,-48.07617 51.06902,-55.45898 56.94497,-71.10352 47.15984))')
-
-?occ_data
-
-
-write.csv(gbif_occurence, "./LargeData/GBIF/temp/csv")
-
-
+for (i in 1:length(excel_rows)){
+  if (i < length(excel_rows)){df <- gbif_data[c(excel_rows[i]:excel_rows[i+1]-1),]} #Splitting into rows from 1-1000000, 1000001-2000000 etc.
+  else if (i == length(excel_rows)){df <- gbif_data[c(excel_rows[i]:nrow(gbif_data)),]} #Splitting the final document that probably doesn't fit evenly into a million rows
+  
+  write.csv(df, paste0("./LargeData/GBIF/GBIFData_part", i, "of", length(excel_rows), ".csv"), row.names = F)
+}
 
