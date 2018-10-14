@@ -16,8 +16,6 @@ obisdata <- occurrence(geometry =
 -46.31836 50.62507, -48.60352 54.74999, -53.65723 58.63122, 
 -63.32520 59.04055, -73.87207 46.76997, -69.14795 44.02442))")
 
-backup <- obisdata
-
 #Split larger data into smaller csvs, each with 1 000 000 rows (excel limit is aroun 1 046 000)
 excel_rows <- seq(from = 1, to = nrow(obisdata), by = 1*10^6) #This rounds down so for example it only does to 3 million rows if the dataframe has 3 000 001 rows
 
@@ -27,13 +25,6 @@ for (i in 1:length(excel_rows)){
   
   write.csv(df, paste0("./LargeData/OBIS/OBISData_part", i, "of", length(excel_rows), ".csv"), row.names = F)
 }
-
-
-#might want to break it down into total occurences of different families, and then maybe number 
-#of families in each hexagon cells. 
-
-
-names(obisdata)
 
 
 obisdatavars <- c('id',
@@ -50,25 +41,24 @@ obisdatavars <- c('id',
          'speciesID',
          'sex',
          'datasetID')
-obisdata <- obisdata[obisdatavars]
-
-obisdata <- read.csv.ffdf(file = "file:///C:/Users/coleb/Dropbox/2018MJFWorkStudy/ChrisConnectivityWork/OBIS/OBISStuff.csv")
-
-
 
 #######RGBIF data download
 
-gbif_occurence <- occ_search(geometry = "POLYGON ((-60.6775 47.3463, -59.6997 46.3697, -57.7441 46.9353, 
-                             -59.8975 47.7984, -60.6775 47.3463))")
-
-gbif_download <- occ_download(gbif_occurence, user = "runcrispy", pwd = "14socialbutterflies", email = "runcrispy@gmail.com")
+gbif_download <- occ_download(user = "runcrispy", pwd = "14socialbutterflies", email = "runcrispy@gmail.com", 
+                              'geometry = POLYGON((-71.10352 47.15984,-65.30273 42.29356,-50.18555 42.29356,-48.07617 51.06902,-55.45898 56.94497,-71.10352 47.15984))')
 
 
-gbif_download <- occ_download(gbif_occurence, user = "runcrispy", pwd = "14socialbutterflies", email = "runcrispy@gmail.com")
+occ_download_meta(gbif_download)
+
+#Tutorial
+#occ_download(user = "runcrispy", pwd = "14socialbutterflies", email = "runcrispy@gmail.com", 'taxonKey = 7264332', 'hasCoordinate = TRUE')
 
 
-occ_download_import(x = NULL, key = NULL, 
-                    path = "C:\Users\coleb\Dropbox\2018MJFWorkStudy\ChrisConnectivityWork\OBIS\0003507-181003121212138.zip", fill = FALSE)
+#Searching (don't need)
+gbif_occurence <- occ_search(geometry = 'POLYGON((-71.10352 47.15984,-65.30273 42.29356,-50.18555 42.29356,-48.07617 51.06902,-55.45898 56.94497,-71.10352 47.15984))')
+
+?occ_data
+
 
 write.csv(gbif_occurence, "./LargeData/GBIF/temp/csv")
 
