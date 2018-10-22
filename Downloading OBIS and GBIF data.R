@@ -1,11 +1,8 @@
 
 ###Loading packages
-#library(devtools)
-#install_github("iobis/robis")
 library(robis)
 library(tidyverse)
 library(rgbif)
-#library(ff)
 library(data.table)
 
 getwd()
