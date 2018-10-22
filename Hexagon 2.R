@@ -23,3 +23,5 @@ new = st_transform(OBIS_poly, "+proj=eqc")
 
 
 str(OBIS_poly)
+
+?SpatialPolygons
