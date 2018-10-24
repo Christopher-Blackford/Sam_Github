@@ -1,4 +1,3 @@
-#install_github("iobis/robis")
 library(tidyverse)
 
 
@@ -14,7 +13,7 @@ OBIS_3 <- read.csv("OBISData_part3of4.csv")
 OBIS_4 <- read.csv("OBISData_part4of4.csv")
 
 OBIS <- rbind(OBIS_1, OBIS_2, OBIS_3, OBIS_4)
-rm(OBIS_1, OBIS_2, OBIS_3, OBIS_4, p, OBIS_noinsects)
+rm(OBIS_1, OBIS_2, OBIS_3, OBIS_4)
 names(OBIS)
 obisnames<- c('id', 'class', 'phylum', 'family', 'order', 'species', 'decimalLongitude', 'decimalLatitude', 'obisID', 'countryCode', 'catalogNumber')
 OBIS <- OBIS[obisnames]
@@ -39,7 +38,6 @@ OBISallelse <- OBIS %>%
   filter(phylum != 'Chordata', phylum != 'Eurarthropoda')
 OBIS$phylum[1:40]
 #Step: make plots
-hist(OBISarth$class)
 
 OBISarthclassplot <- OBISarth %>%
   group_by(class) %>% 
@@ -87,6 +85,8 @@ OBISallelseorderplot
 
 #Workflow for next steps:
 #1. Chris will do spatial clip
-#2. new dataframe will have column called 'poly_id' or something - for each poly_id, 
+#2. After this, the dataframe will have column called 'poly_id' or something - 
+#3. Cole will,for each poly_id, 
 #get the number of chordates, number of arthropods, and number of all else - have this in a 
 #dataframe with column names 'polyid', 'chordate', 'arthropods', 'other' 
+#4. Cole to save existing histograms to figures 
