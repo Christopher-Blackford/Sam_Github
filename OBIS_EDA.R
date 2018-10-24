@@ -42,38 +42,46 @@ OBIS$phylum[1:40]
 OBISarthclassplot <- OBISarth %>%
   group_by(class) %>% 
   ggplot(aes(x = class, na.rm = TRUE)) +
-  geom_bar() +
+  geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
+OBISarthclassplot <- OBISarthclassplot + theme(axis.text.x = element_text(angle = 90))
+
 
 OBISarthorderplot <- OBISarth %>% 
   group_by(order) %>% 
   ggplot(aes(x = order, na.rm = TRUE)) +
-  geom_bar() +
+  geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
+OBISarthclassplot <- OBISarthclassplot + theme(axis.text.x = element_text(angle = 90))
 
 OBISchordclassplot <- OBISchord %>% 
   group_by(class) %>% 
   ggplot(aes(x = class, na.rm = TRUE)) +
-  geom_bar() +
+  geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
+OBISchordclassplot <- OBISchordclassplot + theme(axis.text.x = element_text(angle = 90))
 
 OBISchordorderplot <- OBISchord %>% 
   group_by(order) %>% 
   ggplot(aes(x = order, na.rm = TRUE)) +
-  geom_bar() +
+  geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
+OBISchordorderplot <- OBISchordorderplot + theme(axis.text.x = element_text(angle = 90))
 
 OBISallelseclassplot <- OBISallelse %>% 
   group_by(class) %>% 
   ggplot(aes(x = class, na.rm = TRUE)) +
-  geom_bar() +
+  geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
+OBISallelseclassplot <- OBISallelseclassplot + theme(axis.text.x = element_text(angle = 90))
 
 OBISallelseorderplot <- OBISallelse %>% 
   group_by(order) %>% 
   ggplot(aes(x = order, na.rm = TRUE)) +
-  geom_bar() +
+  geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
+OBISallelseorderplot <- OBISallelseorderplot + theme(axis.text.x = element_text(angle = 90, size = 3))
+
 
 OBISarthclassplot
 OBISarthorderplot
@@ -82,6 +90,18 @@ OBISchordorderplot
 OBISallelseclassplot
 OBISallelseorderplot
 
+ggsave(OBISarthclassplot,
+       file = './output/figures/OBISarthclassplot.png', dpi = 300)
+ggsave(OBISarthorderplot,
+       file = './output/figures/OBISarthorderplot.png', dpi = 300)
+ggsave(OBISchordclassplot,
+       file = './output/figures/OBISchordclassplot.png', dpi = 300)
+ggsave(OBISchordorderplot,
+       file = './output/figures/OBISchordorderplot.png', dpi = 300)
+ggsave(OBISallelseclassplot,
+       file = './output/figures/OBISallelseclassplot.png', dpi = 300)
+ggsave(OBISallelsecorderplot,
+       file = './output/figures/OBISallelseorderplot.png', dpi = 300)
 
 #Workflow for next steps:
 #1. Chris will do spatial clip
