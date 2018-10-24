@@ -8,6 +8,9 @@ library(rgbif)
 install.packages("ff")
 library(ff)
 setwd("C:/Users/coleb/Dropbox/2018MJFWorkStudy/ChrisConnectivityWork")
+
+#Change the amount of memory being used
+memory.limit(size = 25000) 
 #######OBIS data download
 obisdata <- occurrence(geometry = 
 "POLYGON ((-69.14795 44.02442, -67.71973 41.45920, 
@@ -69,56 +72,58 @@ OBIS <- OBIS[obisnames]
 #Step: filter arachnids and insects
 OBIS <- OBIS %>% 
   filter(class != "Insecta", class != 'Arachnida') 
-OBIS_noinsects <- OBIS_noinsects %>% 
-  filter(class != "Arachnida")
+
 
 #Step: make a few dataframes
 OBISarth <- OBIS %>% 
-  filter(phylum == 'Euarthropoda')
-OBISchord <- OBIS_noinsects %>% 
-  filter(phylum = 'Chordata')
-OBISallelse <- OBIS_noinsects %>% 
+  filter(phylum == 'Arthropoda')
+OBISchord <- OBIS %>% 
+  filter(phylum == 'Chordata')
+OBISallelse <- OBIS %>% 
   filter(phylum != 'Chordata', phylum != 'Eurarthropoda')
-
+OBIS$phylum[1:40]
 #Step: make plots
+hist(OBISarth$class)
+
 OBISarthclassplot <- OBISarth %>%
   group_by(class) %>% 
-  ggplot(aes(x = class, y = n, na.rm = TRUE)) +
-  geom_col() +
+  ggplot(aes(x = class, na.rm = TRUE)) +
+  geom_bar() +
   theme_classic()
 
 OBISarthorderplot <- OBISarth %>% 
   group_by(order) %>% 
-  ggplot(aes(x = order, y = n, na.rm = TRUE)) +
-  geom_col() +
+  ggplot(aes(x = order, na.rm = TRUE)) +
+  geom_bar() +
   theme_classic()
 
 OBISchordclassplot <- OBISchord %>% 
   group_by(class) %>% 
-  ggplot(aes(x = class, y = n, na.rm = TRUE)) +
-  geom_col() +
+  ggplot(aes(x = class, na.rm = TRUE)) +
+  geom_bar() +
   theme_classic()
 
 OBISchordorderplot <- OBISchord %>% 
   group_by(order) %>% 
-  ggplot(aes(x = order, y = n, na.rm = TRUE)) +
-  geom_col() +
+  ggplot(aes(x = order, na.rm = TRUE)) +
+  geom_bar() +
   theme_classic()
 
 OBISallelseclassplot <- OBISallelse %>% 
   group_by(class) %>% 
-  ggplot(aes(x = class, y = n, na.rm = TRUE)) +
-  geom_col() +
+  ggplot(aes(x = class, na.rm = TRUE)) +
+  geom_bar() +
   theme_classic()
 
 OBISallelseorderplot <- OBISallelse %>% 
   group_by(order) %>% 
-  ggplot(aes(x = order, y = n, na.rm = TRUE)) +
-  geom_col() +
+  ggplot(aes(x = order, na.rm = TRUE)) +
+  geom_bar() +
   theme_classic()
 
-
-
-
-
-
+OBISarthclassplot
+OBISarthorderplot
+OBISchordclassplot
+OBISchordorderplot
+OBISallelseclassplot
+OBISallelseorderplot
