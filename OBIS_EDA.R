@@ -1,3 +1,4 @@
+#setwd('C:/Users/coleb/Documents/GitHub/Sam_Github')
 
 ###Loading packages
 library(tidyverse)
@@ -5,27 +6,23 @@ library(rgdal)
 library(rgeos)
 library(data.table)
 
-##Loading custom functions
-
-setwd('C:/Users/coleb/Documents/GitHub/Sam_Github')
+###Loading custom functions
 source("./sub_code/functions/my_point_in_poly.R")
 
-#Change the amount of memory being used
+###Allocate extra memory to R
 memory.limit(size = 25000) 
 
 
 ########################
 ########################
-#1. Loading in OBIS files and clipping to study extent (Chris)
+# Loading in OBIS files and clipping to study extent (Chris)
 
 filenames <- list.files(path="LargeData/OBIS/", pattern= "OBISData_", full.names=TRUE, recursive=T)
 
-# load all files into a list
-#datalist <- lapply(filenames, read.csv)
+#datalist <- lapply(filenames, read.csv) # load all files into a list - slower than my loop?
 
 OBIS <- NULL
-for (i in 1:length(filenames)){temp <- read.csv(filenames[i])
-  OBIS <- rbind(OBIS,temp)}
+for (i in 1:length(filenames)){temp <- read.csv(filenames[i]); OBIS <- rbind(OBIS,temp)}
 rm(temp)
 
 names(OBIS)
@@ -41,7 +38,6 @@ OBIS_observations <- SpatialPointsDataFrame(coords = xy, data = OBIS, proj4strin
 OBIS_observations <- spTransform(OBIS_observations, Study_Area_hex@proj4string)
 
 #writeOGR(OBIS_observations, dsn = "./output", layer = "temp", driver = "ESRI Shapefile", verbose = TRUE, overwrite = TRUE, morphToESRI = TRUE)
-
 OBIS_observations <- my.point.in.poly(OBIS_observations, Study_Area_hex)
 
 OBIS <- OBIS_observations@data
@@ -71,15 +67,15 @@ OBISchord <- OBIS %>%
 OBISallelse <- OBIS %>% 
   filter(phylum != 'Chordata', phylum != 'Arthropoda')
 OBIS$phylum[1:40]
-#Step: make plots
 
+
+#Step: make plots
 OBISarthclassplot <- OBISarth %>%
   group_by(class) %>% 
   ggplot(aes(x = class, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
 OBISarthclassplot <- OBISarthclassplot + theme(axis.text.x = element_text(angle = 90))
-
 
 OBISarthorderplot <- OBISarth %>% 
   group_by(order) %>% 
@@ -116,7 +112,6 @@ OBISallelseorderplot <- OBISallelse %>%
   theme_classic()
 OBISallelseorderplot <- OBISallelseorderplot + theme(axis.text.x = element_text(angle = 90, size = 3))
 
-
 OBISarthclassplot
 OBISarthorderplot
 OBISchordclassplot
@@ -140,7 +135,7 @@ ggsave(OBISallelseorderplot,
 
 ########################
 ########################
-#3. Get dataframe of # of chordates, number of arthropods, and number of all else for each Poly_ID (Cole)
+#Get dataframe of # of chordates, number of arthropods, and number of all else for each Poly_ID (Cole)
 
 names(OBIS)
 str(OBIS)
@@ -152,15 +147,16 @@ Polydf <- OBIS %>%
                  Arthropods = sum(phylum == 'Arthropoda'),
                  AllElse = sum(phylum != 'Chordata' & phylum != 'Arthropoda'))
 
-write.csv(Polydf, "./output/Polydf.csv", row.names = F)
+#write.csv(Polydf, "./output/Polydf.csv", row.names = F)
 
 ########################
 ########################
 #4. Spatial heatmap of # of chordates, number of arthropods, and number of all else (Chris)
+#Polydf <- read.csv("./output/Polydf.csv")
 
+OBIS_Poly <- sp::merge(Study_Area_hex, Polydf)
 
-
-
-
+writeOGR(OBIS_Poly, dsn = "./output/shapefiles/OBIS", layer = "OBIS_Poly", driver = "ESRI Shapefile", 
+         verbose = TRUE, overwrite = TRUE, morphToESRI = TRUE)
 
 
