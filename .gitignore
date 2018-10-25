@@ -1,2 +1,7 @@
 #Large data files
 LargeData
+
+#Annoying R files
+*.Rhistory
+.Rproj.user
+*.RData

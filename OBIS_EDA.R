@@ -1,23 +1,55 @@
-library(tidyverse)
 
+###Loading packages
+library(tidyverse)
+library(rgdal)
+library(rgeos)
+library(data.table)
+
+##Loading custom functions
+source("./sub_code/functions/my_point_in_poly.R")
 
 #Change the amount of memory being used
 memory.limit(size = 25000) 
 
-setwd("./LargeData/OBIS")
 
-#Obis Data
-OBIS_1 <- read.csv("OBISData_part1of4.csv")
-OBIS_2 <- read.csv("OBISData_part2of4.csv")
-OBIS_3 <- read.csv("OBISData_part3of4.csv")
-OBIS_4 <- read.csv("OBISData_part4of4.csv")
+########################
+########################
+#1. Loading in OBIS files and clipping to study extent (Chris)
 
-OBIS <- rbind(OBIS_1, OBIS_2, OBIS_3, OBIS_4)
-rm(OBIS_1, OBIS_2, OBIS_3, OBIS_4)
+filenames <- list.files(path="LargeData/OBIS/", pattern= "OBISData_", full.names=TRUE, recursive=T)
+
+# load all files into a list
+#datalist <- lapply(filenames, read.csv)
+
+OBIS <- NULL
+for (i in 1:length(filenames)){temp <- read.csv(filenames[i])
+  OBIS <- rbind(OBIS,temp)}
+rm(temp)
+
 names(OBIS)
 obisnames<- c('id', 'class', 'phylum', 'family', 'order', 'species', 'decimalLongitude', 'decimalLatitude', 'obisID', 'countryCode', 'catalogNumber')
 OBIS <- OBIS[obisnames]
-## Subset the data according to the different dataframes we want
+
+###Spatial subset based on being within study extent
+Study_Area_hex <- readOGR("./output/shapefiles", "Study_Area_hex")
+
+xy <- subset(OBIS, select = c(decimalLongitude, decimalLatitude))
+
+OBIS_observations <- SpatialPointsDataFrame(coords = xy, data = OBIS, proj4string = CRS("+proj=longlat +datum=WGS84"))
+OBIS_observations <- spTransform(OBIS_observations, Study_Area_hex@proj4string)
+
+#writeOGR(OBIS_observations, dsn = "./output", layer = "temp", driver = "ESRI Shapefile", verbose = TRUE, overwrite = TRUE, morphToESRI = TRUE)
+
+OBIS_observations <- my.point.in.poly(OBIS_observations, Study_Area_hex)
+
+OBIS <- OBIS_observations@data
+rm(OBIS_observations, xy, i, filenames, obisnames)
+
+
+########################
+########################
+#2. Subset the data according to the different dataframes we want. Make barplots of results
+
 # Find all inverts except insects and arachnids, make a few data frames:
 # 1. just arthropods
 # 2. just chordates
@@ -102,6 +134,19 @@ ggsave(OBISallelseclassplot,
        file = './output/figures/OBISallelseclassplot.png', dpi = 300)
 ggsave(OBISallelsecorderplot,
        file = './output/figures/OBISallelseorderplot.png', dpi = 300)
+
+
+########################
+########################
+#3. Get dataframe of # of chordates, number of arthropods, and number of all else for each Poly_ID (Cole)
+
+
+########################
+########################
+#4. Spatial heatmap of # of chordates, number of arthropods, and number of all else (Chris)
+
+
+
 
 #Workflow for next steps:
 #1. Chris will do spatial clip
