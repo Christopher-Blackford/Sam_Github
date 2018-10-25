@@ -6,6 +6,8 @@ library(rgeos)
 library(data.table)
 
 ##Loading custom functions
+
+setwd('C:/Users/coleb/Documents/GitHub/Sam_Github')
 source("./sub_code/functions/my_point_in_poly.R")
 
 #Change the amount of memory being used
@@ -46,9 +48,9 @@ OBIS <- OBIS_observations@data
 rm(OBIS_observations, xy, i, filenames, obisnames)
 
 
+#########################
 ########################
-########################
-#2. Subset the data according to the different dataframes we want. Make barplots of results
+# Subset the data according to the different dataframes we want. Make barplots of results
 
 # Find all inverts except insects and arachnids, make a few data frames:
 # 1. just arthropods
@@ -67,7 +69,7 @@ OBISarth <- OBIS %>%
 OBISchord <- OBIS %>% 
   filter(phylum == 'Chordata')
 OBISallelse <- OBIS %>% 
-  filter(phylum != 'Chordata', phylum != 'Eurarthropoda')
+  filter(phylum != 'Chordata', phylum != 'Arthropoda')
 OBIS$phylum[1:40]
 #Step: make plots
 
@@ -140,6 +142,17 @@ ggsave(OBISallelsecorderplot,
 ########################
 #3. Get dataframe of # of chordates, number of arthropods, and number of all else for each Poly_ID (Cole)
 
+names(OBIS)
+str(OBIS)
+OBIS$Poly_ID <- as.factor(OBIS$Poly_ID)
+
+Polydf <- OBIS %>% 
+          group_by(., Poly_ID) %>% 
+          summarize(., Chordates = sum(phylum == 'Chordata'),
+                 Arthropods = sum(phylum == 'Arthropoda'),
+                 AllElse = sum(phylum != 'Chordata' & phylum != 'Arthropoda'))
+
+
 
 ########################
 ########################
@@ -148,10 +161,6 @@ ggsave(OBISallelsecorderplot,
 
 
 
-#Workflow for next steps:
-#1. Chris will do spatial clip
-#2. After this, the dataframe will have column called 'poly_id' or something - 
-#3. Cole will,for each poly_id, 
-#get the number of chordates, number of arthropods, and number of all else - have this in a 
-#dataframe with column names 'polyid', 'chordate', 'arthropods', 'other' 
-#4. Cole to save existing histograms to figures 
+
+
+
