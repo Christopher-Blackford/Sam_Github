@@ -134,7 +134,7 @@ ggsave(OBISchordorderplot,
        file = './output/figures/OBISchordorderplot.png', dpi = 300)
 ggsave(OBISallelseclassplot,
        file = './output/figures/OBISallelseclassplot.png', dpi = 300)
-ggsave(OBISallelsecorderplot,
+ggsave(OBISallelseorderplot,
        file = './output/figures/OBISallelseorderplot.png', dpi = 300)
 
 
@@ -152,7 +152,7 @@ Polydf <- OBIS %>%
                  Arthropods = sum(phylum == 'Arthropoda'),
                  AllElse = sum(phylum != 'Chordata' & phylum != 'Arthropoda'))
 
-
+write.csv(Polydf, "./output/Polydf.csv", row.names = F)
 
 ########################
 ########################
