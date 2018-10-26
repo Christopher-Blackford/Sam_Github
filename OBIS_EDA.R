@@ -111,9 +111,9 @@ OBISallelseclassplot <- OBISallelse %>%
   ggplot(aes(x = class, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISallelseclassplot <- OBISallelseclassplot + theme(axis.text.x = element_text(angle = 90))
+OBISallelseclassplot <- OBISallelseclassplot + theme(axis.text.x = element_text(angle = 90, size = 2)); 
 ggsave(OBISallelseclassplot,
-       file = './output/figures/OBISallelseclassplot.png', width = 16, height = 9, units = "cm", dpi = 300)
+       file = './output/figures/OBISallelseclassplot.png', width = 16, height = 9, units = "cm", dpi = 320)
 
 OBISallelseorderplot <- OBISallelse %>% 
   group_by(order) %>% 
@@ -123,14 +123,6 @@ OBISallelseorderplot <- OBISallelse %>%
 OBISallelseorderplot <- OBISallelseorderplot + theme(axis.text.x = element_text(angle = 90, size = 3))
 ggsave(OBISallelseorderplot,
        file = './output/figures/OBISallelseorderplot.png', width = 32, height = 18, units = "cm", dpi = 320)
-
-OBISarthclassplot
-OBISarthorderplot
-OBISchordclassplot
-OBISchordorderplot
-OBISallelseclassplot
-OBISallelseorderplot
-
 
 
 ########################

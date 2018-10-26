@@ -5,3 +5,5 @@ LargeData
 *.Rhistory
 *.Rproj.user
 *.RData
+
+.Rhistory
