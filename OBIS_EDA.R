@@ -75,28 +75,36 @@ OBISarthclassplot <- OBISarth %>%
   ggplot(aes(x = class, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISarthclassplot <- OBISarthclassplot + theme(axis.text.x = element_text(angle = 90))
+OBISarthclassplot <- OBISarthclassplot + theme(axis.text.x = element_text(angle = 90)); OBISarthclassplot
+ggsave(OBISarthclassplot,
+       file = './output/figures/OBISarthclassplot.png', dpi = 300)
 
 OBISarthorderplot <- OBISarth %>% 
   group_by(order) %>% 
   ggplot(aes(x = order, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISarthclassplot <- OBISarthclassplot + theme(axis.text.x = element_text(angle = 90))
+OBISarthorderplot <- OBISarthorderplot + theme(axis.text.x = element_text(angle = 90)); OBISarthorderplot
+ggsave(OBISarthorderplot,
+       file = './output/figures/OBISarthorderplot.png', dpi = 300)
 
 OBISchordclassplot <- OBISchord %>% 
   group_by(class) %>% 
   ggplot(aes(x = class, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISchordclassplot <- OBISchordclassplot + theme(axis.text.x = element_text(angle = 90))
+OBISchordclassplot <- OBISchordclassplot + theme(axis.text.x = element_text(angle = 90)); OBISchordclassplot
+ggsave(OBISchordclassplot,
+       file = './output/figures/OBISchordclassplot.png', dpi = 300)
 
 OBISchordorderplot <- OBISchord %>% 
   group_by(order) %>% 
   ggplot(aes(x = order, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISchordorderplot <- OBISchordorderplot + theme(axis.text.x = element_text(angle = 90))
+OBISchordorderplot <- OBISchordorderplot + theme(axis.text.x = element_text(angle = 90)); OBISchordorderplot
+ggsave(OBISchordorderplot,
+       file = './output/figures/OBISchordorderplot.png', dpi = 300)
 
 OBISallelseclassplot <- OBISallelse %>% 
   group_by(class) %>% 
@@ -104,6 +112,8 @@ OBISallelseclassplot <- OBISallelse %>%
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
 OBISallelseclassplot <- OBISallelseclassplot + theme(axis.text.x = element_text(angle = 90))
+ggsave(OBISallelseclassplot,
+       file = './output/figures/OBISallelseclassplot.png', dpi = 300)
 
 OBISallelseorderplot <- OBISallelse %>% 
   group_by(order) %>% 
@@ -111,6 +121,8 @@ OBISallelseorderplot <- OBISallelse %>%
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
 OBISallelseorderplot <- OBISallelseorderplot + theme(axis.text.x = element_text(angle = 90, size = 3))
+ggsave(OBISallelseorderplot,
+       file = './output/figures/OBISallelseorderplot.png', dpi = 300)
 
 OBISarthclassplot
 OBISarthorderplot
@@ -119,26 +131,12 @@ OBISchordorderplot
 OBISallelseclassplot
 OBISallelseorderplot
 
-ggsave(OBISarthclassplot,
-       file = './output/figures/OBISarthclassplot.png', dpi = 300)
-ggsave(OBISarthorderplot,
-       file = './output/figures/OBISarthorderplot.png', dpi = 300)
-ggsave(OBISchordclassplot,
-       file = './output/figures/OBISchordclassplot.png', dpi = 300)
-ggsave(OBISchordorderplot,
-       file = './output/figures/OBISchordorderplot.png', dpi = 300)
-ggsave(OBISallelseclassplot,
-       file = './output/figures/OBISallelseclassplot.png', dpi = 300)
-ggsave(OBISallelseorderplot,
-       file = './output/figures/OBISallelseorderplot.png', dpi = 300)
 
 
 ########################
 ########################
 #Get dataframe of # of chordates, number of arthropods, and number of all else for each Poly_ID (Cole)
 
-names(OBIS)
-str(OBIS)
 OBIS$Poly_ID <- as.factor(OBIS$Poly_ID)
 
 Polydf <- OBIS %>% 
