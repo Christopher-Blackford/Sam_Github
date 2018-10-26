@@ -77,7 +77,7 @@ OBISarthclassplot <- OBISarth %>%
   theme_classic()
 OBISarthclassplot <- OBISarthclassplot + theme(axis.text.x = element_text(angle = 90)); OBISarthclassplot
 ggsave(OBISarthclassplot,
-       file = './output/figures/OBISarthclassplot.png', dpi = 300)
+       file = './output/figures/OBISarthclassplot.png', width = 16, height = 9, units = "cm", dpi = 300)
 
 OBISarthorderplot <- OBISarth %>% 
   group_by(order) %>% 
@@ -86,7 +86,7 @@ OBISarthorderplot <- OBISarth %>%
   theme_classic()
 OBISarthorderplot <- OBISarthorderplot + theme(axis.text.x = element_text(angle = 90)); OBISarthorderplot
 ggsave(OBISarthorderplot,
-       file = './output/figures/OBISarthorderplot.png', dpi = 300)
+       file = './output/figures/OBISarthorderplot.png', width = 32, height = 18, units = "cm", dpi = 320)
 
 OBISchordclassplot <- OBISchord %>% 
   group_by(class) %>% 
@@ -95,7 +95,7 @@ OBISchordclassplot <- OBISchord %>%
   theme_classic()
 OBISchordclassplot <- OBISchordclassplot + theme(axis.text.x = element_text(angle = 90)); OBISchordclassplot
 ggsave(OBISchordclassplot,
-       file = './output/figures/OBISchordclassplot.png', dpi = 300)
+       file = './output/figures/OBISchordclassplot.png', width = 16, height = 9, units = "cm", dpi = 300)
 
 OBISchordorderplot <- OBISchord %>% 
   group_by(order) %>% 
@@ -104,7 +104,7 @@ OBISchordorderplot <- OBISchord %>%
   theme_classic()
 OBISchordorderplot <- OBISchordorderplot + theme(axis.text.x = element_text(angle = 90)); OBISchordorderplot
 ggsave(OBISchordorderplot,
-       file = './output/figures/OBISchordorderplot.png', dpi = 300)
+       file = './output/figures/OBISchordorderplot.png', width = 32, height = 18, units = "cm", dpi = 320)
 
 OBISallelseclassplot <- OBISallelse %>% 
   group_by(class) %>% 
@@ -113,7 +113,7 @@ OBISallelseclassplot <- OBISallelse %>%
   theme_classic()
 OBISallelseclassplot <- OBISallelseclassplot + theme(axis.text.x = element_text(angle = 90))
 ggsave(OBISallelseclassplot,
-       file = './output/figures/OBISallelseclassplot.png', dpi = 300)
+       file = './output/figures/OBISallelseclassplot.png', width = 16, height = 9, units = "cm", dpi = 300)
 
 OBISallelseorderplot <- OBISallelse %>% 
   group_by(order) %>% 
@@ -122,7 +122,7 @@ OBISallelseorderplot <- OBISallelse %>%
   theme_classic()
 OBISallelseorderplot <- OBISallelseorderplot + theme(axis.text.x = element_text(angle = 90, size = 3))
 ggsave(OBISallelseorderplot,
-       file = './output/figures/OBISallelseorderplot.png', dpi = 300)
+       file = './output/figures/OBISallelseorderplot.png', width = 32, height = 18, units = "cm", dpi = 320)
 
 OBISarthclassplot
 OBISarthorderplot
