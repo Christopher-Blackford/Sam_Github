@@ -60,69 +60,68 @@ OBIS <- OBIS %>%
 
 
 #Step: make a few dataframes
-OBISarth <- OBIS %>% 
+OBIS_Arth <- OBIS %>% 
   filter(phylum == 'Arthropoda')
-OBISchord <- OBIS %>% 
+OBIS_Chord <- OBIS %>% 
   filter(phylum == 'Chordata')
-OBISallelse <- OBIS %>% 
+OBIS_AllElse <- OBIS %>% 
   filter(phylum != 'Chordata', phylum != 'Arthropoda')
-OBIS$phylum[1:40]
 
 
 #Step: make plots
-OBISarthclassplot <- OBISarth %>%
+OBIS_ArthClass <- OBIS_Arth %>%
   group_by(class) %>% 
   ggplot(aes(x = class, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISarthclassplot <- OBISarthclassplot + theme(axis.text.x = element_text(angle = 90)); OBISarthclassplot
-ggsave(OBISarthclassplot,
-       file = './output/figures/OBISarthclassplot.png', width = 16, height = 9, units = "cm", dpi = 300)
+OBIS_ArthClass <- OBIS_ArthClass + theme(axis.text.x = element_text(angle = 90)); OBIS_ArthClass
+ggsave(OBIS_ArthClass,
+       file = './output/figures/OBIS_ArthClass.png', width = 16, height = 9, units = "cm", dpi = 300)
 
-OBISarthorderplot <- OBISarth %>% 
+OBIS_ArthOrder <- OBIS_Arth %>% 
   group_by(order) %>% 
   ggplot(aes(x = order, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISarthorderplot <- OBISarthorderplot + theme(axis.text.x = element_text(angle = 90)); OBISarthorderplot
-ggsave(OBISarthorderplot,
-       file = './output/figures/OBISarthorderplot.png', width = 32, height = 18, units = "cm", dpi = 320)
+OBIS_ArthOrder <- OBIS_ArthOrder + theme(axis.text.x = element_text(angle = 90)); OBIS_ArthOrder
+ggsave(OBIS_ArthOrder,
+       file = './output/figures/OBIS_ArthOrder.png', width = 32, height = 18, units = "cm", dpi = 320)
 
-OBISchordclassplot <- OBISchord %>% 
+OBIS_ChordClass <- OBIS_Chord %>% 
   group_by(class) %>% 
   ggplot(aes(x = class, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISchordclassplot <- OBISchordclassplot + theme(axis.text.x = element_text(angle = 90)); OBISchordclassplot
-ggsave(OBISchordclassplot,
-       file = './output/figures/OBISchordclassplot.png', width = 16, height = 9, units = "cm", dpi = 300)
+OBIS_ChordClass <- OBIS_ChordClass + theme(axis.text.x = element_text(angle = 90)); OBIS_ChordClass
+ggsave(OBIS_ChordClass,
+       file = './output/figures/OBIS_ChordClass.png', width = 16, height = 9, units = "cm", dpi = 300)
 
-OBISchordorderplot <- OBISchord %>% 
+OBIS_ChordOrder <- OBIS_Chord %>% 
   group_by(order) %>% 
   ggplot(aes(x = order, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISchordorderplot <- OBISchordorderplot + theme(axis.text.x = element_text(angle = 90)); OBISchordorderplot
-ggsave(OBISchordorderplot,
-       file = './output/figures/OBISchordorderplot.png', width = 32, height = 18, units = "cm", dpi = 320)
+OBIS_ChordOrder <- OBIS_ChordOrder + theme(axis.text.x = element_text(angle = 90)); OBIS_ChordOrder
+ggsave(OBIS_ChordOrder,
+       file = './output/figures/OBIS_ChordOrder.png', width = 32, height = 18, units = "cm", dpi = 320)
 
-OBISallelseclassplot <- OBISallelse %>% 
+OBIS_AllElseClass <- OBIS_AllElse %>% 
   group_by(class) %>% 
   ggplot(aes(x = class, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISallelseclassplot <- OBISallelseclassplot + theme(axis.text.x = element_text(angle = 90, size = 2)); 
-ggsave(OBISallelseclassplot,
-       file = './output/figures/OBISallelseclassplot.png', width = 16, height = 9, units = "cm", dpi = 320)
+OBIS_AllElseClass <- OBIS_AllElseClass + theme(axis.text.x = element_text(angle = 90, size = 2)); 
+ggsave(OBIS_AllElseClass,
+       file = './output/figures/OBIS_AllElseClass.png', width = 16, height = 9, units = "cm", dpi = 320)
 
-OBISallelseorderplot <- OBISallelse %>% 
+OBIS_AllElseOrder <- OBIS_AllElse %>% 
   group_by(order) %>% 
   ggplot(aes(x = order, na.rm = TRUE)) +
   geom_bar(colour = 'black', fill = 'red2') +
   theme_classic()
-OBISallelseorderplot <- OBISallelseorderplot + theme(axis.text.x = element_text(angle = 90, size = 3))
-ggsave(OBISallelseorderplot,
-       file = './output/figures/OBISallelseorderplot.png', width = 32, height = 18, units = "cm", dpi = 320)
+OBIS_AllElseOrder <- OBIS_AllElseOrder + theme(axis.text.x = element_text(angle = 90, size = 3))
+ggsave(OBIS_AllElseOrder,
+       file = './output/figures/OBIS_AllElseOrder.png', width = 32, height = 18, units = "cm", dpi = 320)
 
 
 ########################
