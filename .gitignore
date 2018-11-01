@@ -3,5 +3,7 @@ LargeData
 
 #Annoying R files
 *.Rhistory
-.Rproj.user
+*.Rproj.user
 *.RData
+
+.Rhistory
