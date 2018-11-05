@@ -17,7 +17,6 @@ memory.limit(size = 25000)
 ########################
 # Loading in OBIS files and clipping to study extent (Chris)
 
-
 filenames <- list.files(path="LargeData/OBIS/", pattern= "OBISData_", full.names=TRUE, recursive=T)
 
 #datalist <- lapply(filenames, read.csv) # load all files into a list - slower than my loop?
@@ -56,8 +55,8 @@ rm(OBIS_observations, xy, i, filenames, obisnames)
 # and then for each dataframe, do the histogram of the classes and orders!
 
 #Step: filter arachnids and insects
-OBIS <- OBIS %>% 
-  filter(class != "Insecta", class != 'Arachnida') 
+#OBIS <- OBIS %>% 
+#  filter(class != "Insecta", class != 'Arachnida') 
 summary(OBIS$yearcollected)
 
 #Step: make a few dataframes
@@ -184,7 +183,6 @@ libbirdsOBIS <- OBIS %>%
                         'Alaudidae','Apodidae','Caprimulgidae','Cardinalidae','Cuculidae',
                         'Mimidae','Turdidae','Tyrannidae'))
 
-
 # Based on the info below, I excluded a number of these families, I made two 
 #dataframes, a conservative one with as many reasonable taxa as possible,
 #and a liberal one with lots excluded, the ones I excluded or included
@@ -237,14 +235,12 @@ OBIS <- OBIS %>%
   mutate(., LibBird = ifelse(family %in% c('Alcidae', 'Gaviidae','Hydrobatidae',
                                            'Laridae','Phalacrocoracidae','Procellariidae',
                                            'Stercoraridae','Sternidae','Sulidae'), 'Lib', 'No'))
-
 OBIS <- OBIS %>% 
   mutate(., ConsBirds = ifelse(family %in% c('Alcidae', 'Anatidae','Gaviidae','Hydrobatidae',
                                              'Laridae','Phalacrocoracidae','Phalaropodidae','Procellariidae',
                                              'Stercoraridae','Sternidae','Sulidae','Phalaropes','Ardeidae','Charadriidae',
                                              'Podicipedidae','Recurvirostridae','Scolopacidae','Threskiornithidae',
                                              'Phaethontidae','Aramidae','Fregatidae'), 'Cons', 'No'))
-
 
 
 ## Plot for Seabirds
@@ -278,6 +274,14 @@ Polydf <- OBIS %>%
             Capelin = sum(species == 'Mallotus villosus', na.rm = TRUE),
             ConsBirds = sum(ConsBirds == 'Cons'),
             LibBird = sum(LibBird == 'Lib'))
+
+
+#Chris testing
+
+OBIS$Cod_present = 0
+for (i in 1:10000){if (is.na(OBIS$species[i])){} #Need the is.na statement to come first because if it hits an NA conditional statements breakdown
+  else if (OBIS$species[i] == "Gadus morhua"){OBIS$Cod_present[i] = 1}}
+  
 
 
 
