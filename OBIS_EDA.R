@@ -273,7 +273,7 @@ Polydf <- OBIS %>%
             Cod = sum(species == 'Gadus morhua', na.rm = TRUE),
             Capelin = sum(species == 'Mallotus villosus', na.rm = TRUE),
             ConsBirds = sum(ConsBirds == 'Cons'),
-            LibBird = sum(LibBird == 'Lib'))
+            LibBird = sum(LibBird == 'Lib')) 
 
 
 #Chris testing
