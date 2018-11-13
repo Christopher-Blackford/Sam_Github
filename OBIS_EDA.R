@@ -112,7 +112,7 @@ OBIS_AllElseClass <- OBIS_AllElse %>%
   theme_classic()
 OBIS_AllElseClass <- OBIS_AllElseClass + theme(axis.text.x = element_text(angle = 90, size = 2)); 
 ggsave(OBIS_AllElseClass,
-       file = './output/figures/OBIS_AllElseClass.png', width = 16, height = 9, units = "cm", dpi = 320)
+      file = './output/figures/OBIS_AllElseClass.png', width = 16, height = 9, units = "cm", dpi = 320)
 
 OBIS_AllElseOrder <- OBIS_AllElse %>% 
   group_by(order) %>% 
@@ -277,10 +277,9 @@ Polydf <- OBIS %>%
 
 
 #Chris testing
-
-OBIS$Cod_present = 0
-for (i in 1:10000){if (is.na(OBIS$species[i])){} #Need the is.na statement to come first because if it hits an NA conditional statements breakdown
-  else if (OBIS$species[i] == "Gadus morhua"){OBIS$Cod_present[i] = 1}}
+#OBIS$Cod_present = 0
+#for (i in 1:10000){if (is.na(OBIS$species[i])){} #Need the is.na statement to come first because if it hits an NA conditional statements breakdown
+  #else if (OBIS$species[i] == "Gadus morhua"){OBIS$Cod_present[i] = 1}}
   
 
 
