@@ -1,5 +1,4 @@
-#setwd('C:/Users/coleb/Documents/GitHub/Sam_Github')
-
+#setwd('C:/Users/coleb/Documents/GitHub/Sam_Github') 
 ###Loading packages
 library(tidyverse)
 library(rgdal)
@@ -281,6 +280,69 @@ Polydf <- OBIS %>%
 #for (i in 1:10000){if (is.na(OBIS$species[i])){} #Need the is.na statement to come first because if it hits an NA conditional statements breakdown
   #else if (OBIS$species[i] == "Gadus morhua"){OBIS$Cod_present[i] = 1}}
   
+## Do up plot showing the counts of the focal groups as a stacked bar chart with the y-axis 
+##being the number of observations and the x-axis being the 5-year increments - the stacks are the 
+##different groupings (Chordates, arthropods and allelse)
+
+ 
+# make a column to split each occurence into one of the three groupings
+OBIS <- OBIS %>% 
+       mutate(focalphyla = ifelse(
+         phylum == 'Chordata', 'Chordata', ifelse(
+           phylum == 'Arthropoda', 'Arthropoda', 'AllElse'
+         )
+       ))
+# plot before 1950 and after 1950 because of huge differences in orders of magnitude between the two eras 
+year5plotpre1950 <- OBIS %>% 
+  filter(year5 < 1950) %>% 
+  ggplot(.,aes(x = year5, fill = focalphyla)) +
+  geom_histogram(colour = 'black', stat = 'count') +
+  theme_classic()+ 
+  labs(x = 'Year (5-Year Groupings)', y = 'Number of Occurences') +
+  theme(axis.text.x = element_text(angle = 90, size = 7)) 
+year5plotpre1950
+  
+year5plotpost1950 <- OBIS %>% 
+  filter(year5 > 1950) %>% 
+  ggplot(.,aes(x = year5, fill = focalphyla)) +
+  geom_histogram(colour = 'black', stat = 'count') +
+  theme_classic()+ 
+  labs(x = 'Year (5-Year Groupings)', y = 'Number of Occurences', main = 'Occurences of Focal Phyla post-1900') +
+  theme(axis.text.x = element_text(angle = 90, size = 7))
+year5plotpost1950
+
+#use cowplot to plot both of them side by side 
+library(cowplot)
+Year5p <- plot_grid(year5plotpre1950, year5plotpost1950, labels = c('1', '2' ))
+Year5p
 
 
+## Do up a dataframe similar to Polydf where everything is organized in rows according to the centroids, 
+## and then the counts for capelin, cod and seabirds in each of the 5-year intervals 
 
+#make a new column indicating if the occurence is in the groups of interest
+OBIS <- OBIS %>% 
+  mutate(focalsp = ifelse(
+    species == 'Gadus morhua', 'cod', ifelse(
+      species == 'Mallotus villosus', 'capelin', ifelse(
+        ConsBirds == 'Cons', 'seabird', 'other')
+    )
+  ))
+
+#make new temp dataset with only what we need 
+OBIStemp1 <- OBIS %>%
+  select(Poly_ID, year5, focalsp, species, family, yearcollected) %>% 
+  filter(., focalsp %in% c('cod', 'capelin', 'seabird'), yearcollected != 'NA')
+
+#now make the dataset in the form MJF wants it 
+Year5DataSet<- OBIStemp1 %>% 
+  select(year5, focalsp, Poly_ID) %>% 
+  unite(year_sp, year5, focalsp, sep = "_") %>%
+  count(year_sp, Poly_ID) %>%
+  spread(year_sp, n, fill = 0)
+
+#write the csv
+#write.csv(Year5DataSet, file = 'OBISfocalSpeciesData_5YearGroup.csv')
+
+#remove all the unneeded things
+rm(OBIStemp1, Year5DataSet)
