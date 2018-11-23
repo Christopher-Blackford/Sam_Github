@@ -229,6 +229,24 @@ libbirdsOBIS <- OBIS %>%
 #   Turdidae is the thrushes
 #   Tyrannidae is the largest group od songbirds
 
+#Making this spatial
+backup <- CapelinOBIS
+backup$count_row <- 1
+
+#Need to get rid of NAs
+
+#This gets number of occurences in each poly every 5 years
+backup %>% group_by(year5, Poly_ID) %>%
+  summarize(counts_per5 = sum(count_row))
+
+  #Need to split into separate dataframes.....
+  #Need to combine each dataframe to spatial data and change NA to zero if no observations
+  #Need to print out each 5year spatial data.
+
+  #^Loop over Capelin, Cod, Seabird data
+
+
+
 ## add columns to OBIS dataframe for each bird grouping to allow for easy addition to the PolyDf
 OBIS <- OBIS %>% 
   mutate(., LibBird = ifelse(family %in% c('Alcidae', 'Gaviidae','Hydrobatidae',
