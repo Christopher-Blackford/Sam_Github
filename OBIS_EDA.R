@@ -230,14 +230,32 @@ libbirdsOBIS <- OBIS %>%
 #   Tyrannidae is the largest group od songbirds
 
 #Making this spatial
-backup <- CapelinOBIS
-backup$count_row <- 1
+organism_data <- list(CapelinOBIS, CodOBIS, libbirdsOBIS, consbirdsOBIS)
+organism_names <- c("CapelinOBIS", "CodOBIS", "libbirdsOBIS", "consbirdsOBIS")
+organism_dir <- c("Capelin", "Cod", "Seabirds", "Seabirds")
 
-#Need to get rid of NAs
+for (i in 1:length(organism_data)){
+  
+  df <- organism_data[[i]]
+  df$count_row <- 1
+  df <- df[!is.na(df$year5),] #Need to get rid of NAs in year5 column
+  
+  #This gets number of occurences in each poly every 5 years
+  df <- df %>% group_by(year5, Poly_ID) %>%
+    summarize(counts_per5 = sum(count_row))
+  
+  year_list <- unique(df$year5)
+  
+  for (j in 1:length(year_list)){
+    df <- df[(df$year5 == year_list[j]),]
+    temp <- sp::merge(Study_Area_hex, df, all.x=TRUE)
+    
+    writeOGR(temp, dsn = paste0("./output/shapefiles/OBIS/", organism_dir[i]), layer = paste0(organism_names[i], "_year", year_list[j]), driver = "ESRI Shapefile", 
+             verbose = TRUE, overwrite = TRUE, morphToESRI = TRUE)
+  }
+  
+}
 
-#This gets number of occurences in each poly every 5 years
-backup %>% group_by(year5, Poly_ID) %>%
-  summarize(counts_per5 = sum(count_row))
 
   #Need to split into separate dataframes.....
   #Need to combine each dataframe to spatial data and change NA to zero if no observations

@@ -1,5 +1,6 @@
 #Large data files
 LargeData
+output
 
 #Annoying R files
 *.Rhistory
