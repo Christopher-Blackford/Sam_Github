@@ -11,20 +11,17 @@ source("./sub_code/functions/my_point_in_poly.R")
 ###Allocate extra memory to R
 memory.limit(size = 25000) 
 
-
 ########################
 ########################
 # Loading in OBIS files and clipping to study extent (Chris)
 
 filenames <- list.files(path="LargeData/OBIS/", pattern= "OBISData_", full.names=TRUE, recursive=T)
-
 #datalist <- lapply(filenames, read.csv) # load all files into a list - slower than my loop?
 
 OBIS <- NULL
 for (i in 1:length(filenames)){temp <- read.csv(filenames[i]); OBIS <- rbind(OBIS,temp)}
 rm(temp)
 
-names(OBIS)
 obisnames<- c('yearcollected','genus', 'id', 'class', 'phylum', 'family', 'order', 'species', 'decimalLongitude', 'decimalLatitude', 'obisID', 'countryCode', 'catalogNumber')
 OBIS <- OBIS[obisnames]
 
@@ -35,10 +32,9 @@ xy <- subset(OBIS, select = c(decimalLongitude, decimalLatitude))
 
 OBIS_observations <- SpatialPointsDataFrame(coords = xy, data = OBIS, proj4string = CRS("+proj=longlat +datum=WGS84"))
 OBIS_observations <- spTransform(OBIS_observations, Study_Area_hex@proj4string)
-
 #writeOGR(OBIS_observations, dsn = "./output", layer = "temp", driver = "ESRI Shapefile", verbose = TRUE, overwrite = TRUE, morphToESRI = TRUE)
-OBIS_observations <- my.point.in.poly(OBIS_observations, Study_Area_hex)
 
+OBIS_observations <- my.point.in.poly(OBIS_observations, Study_Area_hex)
 OBIS <- OBIS_observations@data
 rm(OBIS_observations, xy, i, filenames, obisnames)
 
@@ -46,17 +42,13 @@ rm(OBIS_observations, xy, i, filenames, obisnames)
 #########################
 ########################
 # Subset the data according to the different dataframes we want. Make barplots of results
-
 # Find all inverts except insects and arachnids, make a few data frames:
 # 1. just arthropods
 # 2. just chordates
 # 3. everything that is not a chordate or an arthropod
 # and then for each dataframe, do the histogram of the classes and orders!
 
-#Step: filter arachnids and insects
-#OBIS <- OBIS %>% 
-#  filter(class != "Insecta", class != 'Arachnida') 
-summary(OBIS$yearcollected)
+#Step: filter arachnids and insects OBIS <- OBIS %>%filter(class != "Insecta", class != 'Arachnida') 
 
 #Step: make a few dataframes
 OBIS_Arth <- OBIS %>% 
@@ -65,7 +57,6 @@ OBIS_Chord <- OBIS %>%
   filter(phylum == 'Chordata')
 OBIS_AllElse <- OBIS %>% 
   filter(phylum != 'Chordata', phylum != 'Arthropoda')
-
 
 #Step: make plots
 OBIS_ArthClass <- OBIS_Arth %>%
@@ -229,6 +220,8 @@ libbirdsOBIS <- OBIS %>%
 #   Turdidae is the thrushes
 #   Tyrannidae is the largest group od songbirds
 
+################################################################################################
+################################################################################################
 #Making this spatial
 organism_data <- list(CapelinOBIS, CodOBIS, libbirdsOBIS, consbirdsOBIS)
 organism_names <- c("CapelinOBIS", "CodOBIS", "libbirdsOBIS", "consbirdsOBIS")
@@ -238,33 +231,37 @@ for (i in 1:length(organism_data)){
   
   df <- organism_data[[i]]
   df$count_row <- 1
-  df <- df[!is.na(df$year5),] #Need to get rid of NAs in year5 column
   
-  #This gets number of occurences in each poly every 5 years
+  #Total observations
+  df_total <- df %>% group_by(Poly_ID) %>% summarize(observe = sum(count_row))
+  df_total <- sp::merge(Study_Area_hex, df_total, all.x=TRUE)
+  df_total@data[is.na(df_total@data)] <- 0
+  writeOGR(df_total, dsn = paste0("./output/shapefiles/OBIS/", organism_dir[i]), layer = paste0(organism_names[i], "_total"), 
+           driver = "ESRI Shapefile", verbose = TRUE, overwrite = TRUE, morphToESRI = TRUE)
+
+  #When year is not recorded
+  df_na <- df[is.na(df$year5),] #Export sapefile when there's no year associated with data
+  df_na <- df_na %>% group_by(Poly_ID) %>% summarize(observe = sum(count_row))
+  df_na <- sp::merge(Study_Area_hex, df_na, all.x=TRUE)
+  df_na@data[is.na(df_na@data)] <- 0
+  writeOGR(df_na, dsn = paste0("./output/shapefiles/OBIS/", organism_dir[i]), layer = paste0(organism_names[i], "_yearNA"), 
+           driver = "ESRI Shapefile", verbose = TRUE, overwrite = TRUE, morphToESRI = TRUE)
+
+  #For every 5 years
   df <- df %>% group_by(year5, Poly_ID) %>%
-    summarize(counts_per5 = sum(count_row))
-  
+    summarize(observe = sum(count_row))
   year_list <- unique(df$year5)
   
   for (j in 1:length(year_list)){
-    df <- df[(df$year5 == year_list[j]),]
-    df$year5 <- NULL
+    df <- df[(df$year5 == year_list[j]),]; df$year5 <- NULL
     temp <- sp::merge(Study_Area_hex, df, all.x=TRUE)
     temp@data[is.na(temp@data)] <- 0
     writeOGR(temp, dsn = paste0("./output/shapefiles/OBIS/", organism_dir[i]), layer = paste0(organism_names[i], "_year", year_list[j]), driver = "ESRI Shapefile", 
              verbose = TRUE, overwrite = TRUE, morphToESRI = TRUE)
   }
-  
 }
-
-
-  #Need to split into separate dataframes.....
-  #Need to combine each dataframe to spatial data and change NA to zero if no observations
-  #Need to print out each 5year spatial data.
-
-  #^Loop over Capelin, Cod, Seabird data
-
-
+################################################################################################
+################################################################################################
 
 ## add columns to OBIS dataframe for each bird grouping to allow for easy addition to the PolyDf
 OBIS <- OBIS %>% 
