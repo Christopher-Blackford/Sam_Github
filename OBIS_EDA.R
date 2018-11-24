@@ -248,8 +248,9 @@ for (i in 1:length(organism_data)){
   
   for (j in 1:length(year_list)){
     df <- df[(df$year5 == year_list[j]),]
+    df$year5 <- NULL
     temp <- sp::merge(Study_Area_hex, df, all.x=TRUE)
-    
+    temp@data[is.na(temp@data)] <- 0
     writeOGR(temp, dsn = paste0("./output/shapefiles/OBIS/", organism_dir[i]), layer = paste0(organism_names[i], "_year", year_list[j]), driver = "ESRI Shapefile", 
              verbose = TRUE, overwrite = TRUE, morphToESRI = TRUE)
   }
