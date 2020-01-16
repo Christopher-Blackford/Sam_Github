@@ -1,6 +1,8 @@
 #Large data files
 LargeData
 output
+AtlanticLTRANS
+LTRANS_connectivity-gh-pages
 
 #Annoying R files
 *.Rhistory
